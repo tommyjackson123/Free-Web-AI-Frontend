@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Web AI</title>
+</head>
+<body>
+  <h1>AI Task Input</h1>
+  <form id="aiForm">
+    <label for="inputData">Enter task:</label>
+    <input type="text" id="inputData" name="inputData" required>
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="response">
+    <p id="result"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById('aiForm');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const inputData = document.getElementById('inputData').value;
+      const responseDiv = document.getElementById('response');
+      const result = document.getElementById('result');
+
+      try {
+        const response = await fetch('https://free-web-ai-backend.vercel.app', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ inputData }),
+        });
+
+        const data = await response.json();
+        result.textContent = `AI Response: ${data.message} - ${data.data}`;
+      } catch (error) {
+        result.textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
