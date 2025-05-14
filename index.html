@@ -1,7 +1,20 @@
-const response = await fetch('https://free-web-ai-backend.vercel.app/api/process', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({ inputData })
-});
+<script>
+  document.getElementById('submitBtn').addEventListener('click', async () => {
+    const inputData = document.getElementById('inputField').value;
+
+    try {
+      const response = await fetch('https://free-web-ai-backend.vercel.app/api/process', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ inputData })
+      });
+
+      const data = await response.json();
+      console.log(data);  // You can show this on the page too if you want
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  });
+</script>
