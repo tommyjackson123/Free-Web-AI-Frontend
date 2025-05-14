@@ -1,20 +1,7 @@
-<script>
-  document.getElementById('submitBtn').addEventListener('click', async () => {
-    const inputData = document.getElementById('inputField').value;
-    
-    try {
-      const response = await fetch('https://free-web-ai-backend.vercel.app', {  // Use the backend URL here
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ inputData })
-      });
-      
-      const data = await response.json();
-      console.log(data);  // This is where you can log the response or display it
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  });
-</script>
+const response = await fetch('https://free-web-ai-backend.vercel.app/api/process', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ inputData })
+});
