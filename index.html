@@ -1,23 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Free Web AI</title>
-</head>
-<body>
-  <h1>Free Web AI</h1>
-  <p>Type your task below and let the AI handle it:</p>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('submitBtn');
+    const input = document.getElementById('inputField');
+    const output = document.getElementById('responseOutput');
 
-  <input type="text" id="inputField" placeholder="e.g. Generate a 2-minute video about cats" style="width: 300px;">
-  <button id="submitBtn">Submit</button>
-
-  <pre id="responseOutput" style="margin-top: 20px; background: #f0f0f0; padding: 10px;"></pre>
-
-  <script>
-    document.getElementById('submitBtn').addEventListener('click', async () => {
-      const inputData = document.getElementById('inputField').value;
-      const output = document.getElementById('responseOutput');
+    button.addEventListener('click', async () => {
+      const inputData = input.value;
       output.textContent = 'Processing...';
 
       try {
@@ -37,6 +25,5 @@
         output.textContent = '❌ Error talking to the AI backend.';
       }
     });
-  </script>
-</body>
-</html>
+  });
+</script>
