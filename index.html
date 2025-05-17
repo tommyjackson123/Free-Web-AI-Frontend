@@ -1,49 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Free Web AI</title>
-</head>
-<body>
-  <h1>Free Web AI</h1>
-  <p>Type your task below and let the AI handle it:</p>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('submitBtn');
+    const input = document.getElementById('inputField');
+    const output = document.getElementById('responseOutput');
 
-  <input type="text" id="inputField" placeholder="e.g. Summarize this article about AI..." style="width: 300px;">
+    button.addEventListener('click', async () => {
+      const inputData = input.value;
+      output.textContent = '🧠 Thinking...';
 
-  <button id="submitBtn">Submit</button>
+      try {
+        const response = await fetch('https://free-web-ai-backend.vercel.app/api/process', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ inputData })
+        });
 
-  <pre id="responseOutput" style="margin-top: 20px; background: #f0f0f0; padding: 10px;"></pre>
+        const data = await response.json();
 
-  <!-- ✅ Replace the script below with this updated version -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const button = document.getElementById('submitBtn');
-      const input = document.getElementById('inputField');
-      const output = document.getElementById('responseOutput');
-
-      button.addEventListener('click', async () => {
-        const inputData = input.value;
-        output.textContent = 'Processing...';
-
-        try {
-          const response = await fetch('https://free-web-ai-backend.vercel.app/api/process', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ inputData })
-          });
-
-          const data = await response.json();
-          output.textContent = JSON.stringify(data, null, 2);
-          console.log(data);
-        } catch (error) {
-          console.error('Error:', error);
-          output.textContent = '❌ Error talking to the AI backend.';
+        // 🖼 If it's an image task
+        if (data.result && data.result.image) {
+          output.innerHTML = `<p><strong>${data.message}</strong></p><img src="${data.result.image}" alt="Generated Image" style="max-width: 100%;">`;
         }
-      });
+        // 📝 If it's a summary or text
+        else if (Array.isArray(data.result) && data.result[0]?.summary_text) {
+          output.innerHTML = `<p><strong>${data.message}</strong></p><p>${data.result[0].summary_text}</p>`;
+        }
+        // 🔁 Generic fallback
+        else {
+          output.textContent = JSON.stringify(data, null, 2);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        output.textContent = '❌ Error talking to the AI backend.';
+      }
     });
-  </script>
-</body>
-</html>
+  });
+</script>
