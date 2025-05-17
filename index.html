@@ -9,43 +9,46 @@
   <h1>Free Web AI</h1>
   <p>Type your task below and let the AI handle it:</p>
 
-  <input type="text" id="inputField" placeholder="e.g. Generate an image of a flying cat" style="width: 300px;">
+  <input type="text" id="inputField" placeholder="e.g. Generate a 2-minute video about cats" style="width: 300px;">
   <button id="submitBtn">Submit</button>
 
   <pre id="responseOutput" style="margin-top: 20px; background: #f0f0f0; padding: 10px;"></pre>
 
-  <!-- ✅ Script moved here -->
+  <!-- ✅ JavaScript goes here -->
   <script>
-    const button = document.getElementById('submitBtn');
-    const input = document.getElementById('inputField');
-    const output = document.getElementById('responseOutput');
+    document.addEventListener('DOMContentLoaded', () => {
+      const button = document.getElementById('submitBtn');
+      const input = document.getElementById('inputField');
+      const output = document.getElementById('responseOutput');
 
-    button.addEventListener('click', async () => {
-      const inputData = input.value;
-      output.textContent = '🧠 Processing...';
+      button.addEventListener('click', async () => {
+        const inputData = input.value;
+        output.textContent = '🧠 Processing...';
 
-      try {
-        const response = await fetch('https://free-web-ai-backend.vercel.app/api/process', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ inputData })
-        });
+        try {
+          const response = await fetch('https://free-web-ai-backend.vercel.app/api/process', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ inputData })
+          });
 
-        const data = await response.json();
+          const data = await response.json();
 
-        if (data.result?.image) {
-          output.innerHTML = `<img src="${data.result.image}" alt="Generated Image" style="max-width: 100%;">`;
-        } else if (data.result?.[0]?.summary_text) {
-          output.textContent = data.result[0].summary_text;
-        } else {
-          output.textContent = JSON.stringify(data, null, 2);
+          // Render output depending on what comes back
+          if (data.result?.image) {
+            output.innerHTML = `<img src="${data.result.image}" alt="Generated Image" style="max-width: 100%;">`;
+          } else if (data.result?.[0]?.summary_text) {
+            output.textContent = data.result[0].summary_text;
+          } else {
+            output.textContent = JSON.stringify(data, null, 2);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          output.textContent = '❌ Error talking to the AI backend.';
         }
-      } catch (error) {
-        console.error('Error:', error);
-        output.textContent = '❌ Error talking to the AI backend.';
-      }
+      });
     });
   </script>
 </body>
